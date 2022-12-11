@@ -1,0 +1,143 @@
+use Education;
+select subj_name from subject; --1
+select inst_name from institute; --2
+select distinct stipendia from student; --3
+select distinct course from student; --4
+select family, name, last_name from student order by family, name, last_name, birthday; --5
+select family, course, birthday from student order by course, birthday; --6
+select lect_id, family, name, last_name from lecturer; --7
+select family, name, last_name, stipendia from student where stipendia>0 order by stipendia desc, family; --8
+select family, name, last_name from student where course = 1 order by family; --9
+select family, name, last_name from student where course = 2 or course = 3;--10
+select family, course from student where course not in (1,3); --11
+select family, course from student where course = 2 or course>3; --11
+select distinct subj_id, subj_name, mark from subject, exam where mark = 5; --12
+--13
+select distinct "subject".subj_name, "hour", mark 
+from "subject", exam, knowledge, nagruzka 
+where("subject".subj_id=knowledge.subj_id 
+and knowledge.kvant_id = nagruzka.kvant_id 
+and nagruzka.nagr_id=exam.nagr_id)
+and mark=2;
+--14
+select distinct family, "subject".subj_name, town_name, mark
+from student, "subject", parents, exam, knowledge, town, nagruzka
+where town.town_name = 'Березовский'
+and "subject".subj_id = 7
+and student.student_id = exam.student_id
+and knowledge.subj_id = "subject".subj_id
+and mark>2
+and student.student_id = parents.student_id
+and parents.town_id = town.town_id
+--15
+select family, subj_name, mark
+from student, "subject", exam, attest
+where student.student_id =exam.student_id
+and exam.nagr_id = "subject".subj_id
+and mark > 2
+and attest.attest_id = 2
+order by subj_name asc, mark desc, family asc;
+--16
+select distinct family, subj_name, mark
+from student, "subject",  exam, attest
+where "subject".subj_id = 6
+and student.student_id = exam.student_id
+and exam.nagr_id = "subject".subj_id
+and mark=2
+order by family asc;
+--17 
+select distinct family, town.town_name
+from student, town, medalist, medali, parents
+where medalist.medal_id = 2
+and medali.medal_id = 2
+and student.student_id = parents.student_id
+and student.student_id = medalist.student_id
+and parents.town_id = town.town_id
+--18 
+select distinct family, subj_name, exam_date  
+from student, subject, exam
+where exam.mark =2
+and student.student_id = exam.student_id
+and  exam.nagr_id = "subject".subj_id
+--19
+select distinct family, subj_name, mark, exam_date
+from student, subject, exam, knowledge, nagruzka
+where subject.subj_id = knowledge.subj_id
+and knowledge.kvant_id = nagruzka.kvant_id
+and nagruzka.nagr_id = exam.nagr_id
+and exam.student_id = student.student_id
+and (exam.exam_date = '2019-06-13' or exam.exam_date = '2019-05-24')
+and exam.mark = 2
+--20
+select student.family, lecturer.family, subj_name, exam_date
+from student, lecturer, exam, subject, nagruzka, knowledge
+where subject.subj_id = knowledge.subj_id
+and nagruzka.nagr_id = exam.nagr_id
+and knowledge.kvant_id = nagruzka.nagr_id
+and exam.student_id = student.student_id
+and lecturer.lect_id = nagruzka.lect_id
+and exam.mark = 5
+--21
+select distinct inst_name
+from exam, institute, nagruzka, lecturer, knowledge
+where exam.mark =2
+and institute.inst_id = lecturer.inst_id
+and lecturer.lect_id = nagruzka.lect_id
+and nagruzka.nagr_id = exam.nagr_id
+and nagruzka.kvant_id = knowledge.kvant_id
+and knowledge."hour" > 80
+
+
+
+--2
+select sin(80)
+select floor(543.21)
+select CEILING(543.21)
+select exp(7)
+select SQRT(64)
+select round(987.654, 1)
+select LOG(100)
+select LOG10(99)
+--3
+select family, left(name, 1) as "name", left(last_name,1) as "last_name"
+from student
+where LEFT(family, 1) = 'В'
+select (family + left(name, 1) +  left(last_name,1)) as "FIO"
+from student
+where LEFT(family, 1) = 'В'
+select (family + ' ' + left(name, 1) + '. ' + left(last_name,1) + '.') as "FIO"
+from student
+where LEFT(family, 1) = 'В'
+select CHARINDEX('voznesensckaya', 'mathvoznesensckayaenglish', 1)
+select (REPLICATE('#', LEN('Вознесенская')*6 / 2-LEN("family")) + family + REPLICATE('#', LEN('Вознесенская')*6 / 2-LEN("family")) ) as "family"
+from lecturer
+select REPLACE(subj_name, 'БЖД', 'Вознесенская')
+from "subject"
+select CHARINDEX('ка', subj_name)
+from "subject";
+--4
+select SYSDATETIME(), GETDATE()
+select DATEADD(DAY, 4, CURRENT_TIMESTAMP)
+select DATEADD(MONTH, 4, CURRENT_TIMESTAMP)
+select DATEADD(YEAR, 4, CURRENT_TIMESTAMP)
+--5
+select DATEDIFF(MONTH, birthday,  birthday)
+from student
+where student.student_id = 1
+DECLARE @max int
+SET @max = (select max(student_id)
+from student)
+DECLARE @bird date
+SET @bird = (select birthday
+from student
+where student_id = 1)
+DECLARE @bird2 date
+SET @bird2 = (select birthday
+from student
+where student_id = @max)
+select distinct DATEDIFF(month, @bird, @bird2)
+from student
+--6
+select POWER(23, 2)
+select POWER(6, 3)
+select POWER(9, 1)
